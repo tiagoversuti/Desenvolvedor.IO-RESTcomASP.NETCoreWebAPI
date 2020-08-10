@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,19 @@ namespace DevIO.Api.Configuration
                                       .AllowAnyMethod()
                                       .AllowAnyHeader()
                                       .AllowCredentials());
+
+                options.AddDefaultPolicy(
+                    builder => builder.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader()
+                                      .AllowCredentials());
+
+                options.AddPolicy("Production",
+                    builder => builder.WithMethods("GET")
+                                      .WithOrigins("http://desenvolvedor.io")
+                                      .SetIsOriginAllowedToAllowWildcardSubdomains()
+                                      //.WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                                      .AllowAnyHeader());
             });
 
             return services;
